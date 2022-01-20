@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
+import java.awt.Toolkit;
 
 import javax.swing.JComponent;
 
@@ -19,6 +20,7 @@ public class TimeLabel extends JComponent {
     public void setText(String text) {
         this.text = text;
         repaint();
+        Toolkit.getDefaultToolkit().sync();
     }
     
     public void setTimerPrecision(String timerPrecisionId) {
