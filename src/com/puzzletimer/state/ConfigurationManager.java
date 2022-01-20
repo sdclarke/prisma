@@ -1,47 +1,45 @@
 package com.puzzletimer.state;
 
+import com.puzzletimer.models.ConfigurationEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.puzzletimer.models.ConfigurationEntry;
-
 public class ConfigurationManager {
-    public static class Listener {
-        public void configurationEntryUpdated(String key, String value) { }
+  public static class Listener {
+    public void configurationEntryUpdated(String key, String value) {}
+  }
+
+  private ArrayList<Listener> listeners;
+  private HashMap<String, ConfigurationEntry> entryMap;
+
+  public ConfigurationManager(ConfigurationEntry[] entries) {
+    this.listeners = new ArrayList<Listener>();
+
+    this.entryMap = new HashMap<String, ConfigurationEntry>();
+    for (ConfigurationEntry entry : entries) {
+      this.entryMap.put(entry.getKey(), entry);
     }
+  }
 
-    private ArrayList<Listener> listeners;
-    private HashMap<String, ConfigurationEntry> entryMap;
+  public String getConfiguration(String key) {
+    ConfigurationEntry configurationEntry = this.entryMap.get(key);
+    if (configurationEntry == null) return null;
 
-    public ConfigurationManager(ConfigurationEntry[] entries) {
-        this.listeners = new ArrayList<Listener>();
+    return configurationEntry.getValue();
+  }
 
-        this.entryMap = new HashMap<String, ConfigurationEntry>();
-        for (ConfigurationEntry entry : entries) {
-            this.entryMap.put(entry.getKey(), entry);
-        }
+  public void setConfiguration(String key, String value) {
+    this.entryMap.put(key, new ConfigurationEntry(key, value));
+    for (Listener listener : this.listeners) {
+      listener.configurationEntryUpdated(key, value);
     }
+  }
 
-    public String getConfiguration(String key) {
-        ConfigurationEntry configurationEntry = this.entryMap.get(key);
-        if (configurationEntry == null)
-            return null;
+  public void addListener(Listener listener) {
+    this.listeners.add(listener);
+  }
 
-        return configurationEntry.getValue();
-    }
-
-    public void setConfiguration(String key, String value) {
-        this.entryMap.put(key, new ConfigurationEntry(key, value));
-        for (Listener listener : this.listeners) {
-            listener.configurationEntryUpdated(key, value);
-        }
-    }
-
-    public void addListener(Listener listener) {
-        this.listeners.add(listener);
-    }
-
-    public void removeListener(Listener listener) {
-        this.listeners.remove(listener);
-    }
+  public void removeListener(Listener listener) {
+    this.listeners.remove(listener);
+  }
 }
