@@ -19,7 +19,7 @@ public class TimeLabel extends JComponent {
   public void setText(String text) {
     this.text = text;
     repaint();
-    Toolkit.getDefaultToolkit().sync();
+    if (System.getProperty("os.name").equals("Linux")) Toolkit.getDefaultToolkit().sync();
   }
 
   public void setTimerPrecision(String timerPrecisionId) {
